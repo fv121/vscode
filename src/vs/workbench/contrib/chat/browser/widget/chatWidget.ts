@@ -62,6 +62,7 @@ import { IChatSessionsService } from '../../common/chatSessionsService.js';
 import { IChatSlashCommandService } from '../../common/participants/chatSlashCommands.js';
 import { IChatArtifactsService } from '../../common/tools/chatArtifactsService.js';
 import { IChatTodoListService } from '../../common/tools/chatTodoListService.js';
+import { ChatArtifactRulesExtractor } from '../chatArtifactRulesExtractor.js';
 import { ChatRequestVariableSet, IChatRequestVariableEntry, isPromptFileVariableEntry, isPromptTextVariableEntry, isWorkspaceVariableEntry, PromptFileVariableKind, toPromptFileVariableEntry } from '../../common/attachments/chatVariableEntries.js';
 import { ChatViewModel, IChatResponseViewModel, isRequestVM, isResponseVM } from '../../common/model/chatViewModel.js';
 import { CodeBlockModelCollection } from '../../common/widget/codeBlockModelCollection.js';
@@ -2118,6 +2119,12 @@ export class ChatWidget extends Disposable implements IChatWidget {
 		this.updateChatInputContext();
 		this.input.renderChatTodoListWidget(this.viewModel.sessionResource);
 		this.input.renderArtifactsWidget(this.viewModel.sessionResource);
+
+		// Set up rules-based artifact extraction when mode is "rules"
+		if (this.configurationService.getValue<boolean>(ChatConfiguration.ArtifactsEnabled) &&
+			this.configurationService.getValue<string>(ChatConfiguration.ArtifactsMode) !== 'tool') {
+			this.viewModelDisposables.add(this.instantiationService.createInstance(ChatArtifactRulesExtractor, model, model.sessionResource));
+		}
 	}
 
 	getFocus(): ChatTreeItem | undefined {

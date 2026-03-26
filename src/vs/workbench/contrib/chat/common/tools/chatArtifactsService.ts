@@ -12,12 +12,19 @@ import { IStorageService, StorageScope, StorageTarget } from '../../../../../pla
 import { Memento } from '../../../../common/memento.js';
 import { chatSessionResourceToId } from '../model/chatUri.js';
 
+export interface IArtifactGroupConfig {
+	readonly groupName: string;
+	readonly onlyShowGroup?: boolean;
+}
+
 export interface IChatArtifact {
 	readonly label: string;
 	readonly uri: string;
 	readonly toolCallId?: string;
 	readonly dataPartIndex?: number;
 	readonly type: 'devServer' | 'screenshot' | 'plan' | undefined;
+	readonly groupName?: string;
+	readonly onlyShowGroup?: boolean;
 }
 
 export const IChatArtifactsService = createDecorator<IChatArtifactsService>('chatArtifactsService');
