@@ -1648,6 +1648,9 @@ export interface IChatModelInputState {
 	/** Current selection ranges */
 	selections: ISelection[];
 
+	/** Current permission level for tool auto-approval */
+	permissionLevel?: ChatPermissionLevel;
+
 	/** Contributed stored state */
 	contrib: Record<string, unknown>;
 }
@@ -1667,6 +1670,7 @@ export interface ISerializableChatModelInputState {
 	} | undefined;
 	inputText: string;
 	selections: ISelection[];
+	permissionLevel?: ChatPermissionLevel;
 	contrib: Record<string, unknown>;
 }
 
@@ -1889,7 +1893,8 @@ class InputModel implements IInputModel {
 				metadata: value.selectedModel.metadata
 			} : undefined,
 			inputText: value.inputText,
-			selections: value.selections
+			selections: value.selections,
+			permissionLevel: value.permissionLevel,
 		};
 	}
 }
@@ -2181,7 +2186,8 @@ export class ChatModel extends Disposable implements IChatModel {
 			},
 			contrib: serializedInputState.contrib,
 			inputText: serializedInputState.inputText,
-			selections: serializedInputState.selections
+			selections: serializedInputState.selections,
+			permissionLevel: serializedInputState.permissionLevel,
 		});
 
 		this.dataSerializer = dataRef?.serializer;
